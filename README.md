@@ -1,4 +1,6 @@
-## Cocktail Recipe App
+# Cocktail Recipe App
+
+공학 문제 해결을 위한 컴퓨팅 사고력 기말 과제
 
 ### Profile
 
