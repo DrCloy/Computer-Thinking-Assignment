@@ -20,3 +20,5 @@
 - 칵테일 레시피 출처
   - [Punch](https://punchdrink.com/)
   - [Absolut Drinks](https://www.absolutdrinks.com/)
+  - [Liquor](https://www.liquor.com/)
+  - [Difford's Guide](https://www.diffordsguide.com/)
