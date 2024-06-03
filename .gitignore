@@ -1,5 +1,4 @@
 memo*
-
 *.json
-
 vscode/*
+test.py
