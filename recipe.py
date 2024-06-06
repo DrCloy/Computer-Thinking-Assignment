@@ -77,14 +77,14 @@ class Recipe:
         with open(os.path.join(os.getcwd(), "cocktail_recipe.pkl"), "wb") as f:
             pickle.dump(self.__recipe, f)
 
-    def get_recipe(self) -> dict:
+    def get_category(self) -> dict:
         """
         Function to return recipe dictionary
 
         Returns:
             Recipe dictionary
         """
-        return self.__recipe
+        return self.__recipe["category"]
 
     def get_created_time(self) -> str:
         """
@@ -93,4 +93,17 @@ class Recipe:
         Returns:
             Time the recipe was created in string format(YYYY년MM월DD일 HH시MM분SS초)
         """
-        return self.__created_time
+        return self.__recipe["created_at"]
+
+    def get_recipe_detail(self, name: str) -> dict:
+        """
+        Function to find cocktail recipe by name and return the recipe details
+
+        Args:
+            name (str): Name of the cocktail
+
+        Returns:
+            dict: Recipe details
+        """
+
+        return self.__recipe["recipe_details"][name]
