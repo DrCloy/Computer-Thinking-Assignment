@@ -59,6 +59,7 @@ class Recipe:
 
         self.__recipe["created_at"] = time.strftime("%Y년%m월%d일 %H시%M분%S초", time.localtime())
         self.__recipe["category"] = __parse_directory(self.__recipe_directory)
+        self.__recipe["recipe_details"] = recipe_details
 
     def import_recipe(self):
         """
@@ -66,21 +67,15 @@ class Recipe:
         """
 
         with open(os.path.join(os.getcwd(), "cocktail_recipe.pkl"), "rb") as f:
-            self.__recipe = pickle.load(f)["recipe"]
-            self.__created_time = pickle.load(f)["timestamp"]
+            self.__recipe = pickle.load(f)
 
     def export_recipe(self):
         """
         Function to export recipe dictionary to "cocktail_recipe.pkl" file
         """
 
-        pickle_data = {
-            "timestamp": time.strftime("%Y년%m월%d일 %H시%M분%S초", time.localtime()),
-            "recipe": self.__recipe,
-        }
-
         with open(os.path.join(os.getcwd(), "cocktail_recipe.pkl"), "wb") as f:
-            pickle.dump(pickle_data, f)
+            pickle.dump(self.__recipe, f)
 
     def get_recipe(self) -> dict:
         """
