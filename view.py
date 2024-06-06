@@ -60,9 +60,7 @@ class InitView:
         self.__root.destroy()
 
     def get_root_directory(self):
-        if hasattr(self, "__root_directory"):
-            return self.__root_directory
-        return None
+        return self.__root_directory
 
     def is_active(self):
         return self.__is_active
