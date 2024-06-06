@@ -13,7 +13,6 @@ if __name__ == "__main__":
 
     root_directory = init_view.get_root_directory()
     print(root_directory)
-    # root_directory = init_view.get_root_directory()
 
     # recipe = Recipe(root_directory)
     # recipe.import_recipe()
