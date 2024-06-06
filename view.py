@@ -30,8 +30,11 @@ class InitView:
     """
 
     def __init__(self) -> None:
+        self.__is_active = True
+
         self.__root = tk.Tk()
         self.__root.title("Cocktail Recipe Application")
+        self.__root.geometry("400x200")
 
         self.__label = tk.Label(self.__root, text="Enter the root directory of recipe files")
         self.__label.pack(pady=10)
@@ -42,7 +45,13 @@ class InitView:
         self.__submit_button = tk.Button(self.__root, text="Submit", command=self.__submit)
         self.__submit_button.pack(pady=10)
 
+        self.__root.protocol("WM_DELETE_WINDOW", self.__on_exit_click)
         self.__root.mainloop()
+
+    def __on_exit_click(self):
+        self.__is_active = False
+        print("Application closed")
+        self.__root.destroy()
 
     def __submit(self):
         self.__root_directory = self.__text_input.get()
@@ -51,4 +60,9 @@ class InitView:
         self.__root.destroy()
 
     def get_root_directory(self):
-        return self.__root_directory
+        if hasattr(self, "__root_directory"):
+            return self.__root_directory
+        return None
+
+    def is_active(self):
+        return self.__is_active

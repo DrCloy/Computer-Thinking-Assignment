@@ -8,6 +8,8 @@ if __name__ == "__main__":
     while True:
         if init_view.get_root_directory():
             break
+        elif not init_view.is_active():
+            exit()
 
     root_directory = init_view.get_root_directory()
     print(root_directory)
