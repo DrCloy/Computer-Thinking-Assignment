@@ -114,7 +114,12 @@ class Recipe:
             if not isinstance(dictionary, dict):
                 return depth
 
-            return max(__get_depth(value, depth + 1) for value in dictionary.values())
+            # Return the maximum depth of the dictionary
+            # 단순히 __get_depth만 호출하면 빈 dictionary가 들어왔을 때 결과가 없어서 max 함수에서 에러가 발생함
+            # 따라서 max 함수에 0을 추가하여 빈 dictionary가 들어왔을 때 0을 반환하도록 함
+            # 이때 max 함수는 iterable을 받기 때문에 빈 dictionary가 들어왔을 때는 0 하나만 존재하여 iterable이 되지 않음
+            # 따라서 전체를 괄호로 묶어서 iterable이 되도록 함
+            return max((0, *(__get_depth(value, depth + 1) for value in dictionary.values())))
 
         return __get_depth(self.__recipe["category"])
 
