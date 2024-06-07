@@ -12,7 +12,10 @@ class Recipe:
     Class to manage cocktail recipes 
     """
 
-    __recipe = {}
+    # Private attributes
+    __recipe: dict = {}
+    __recipe_depth: int = 0
+    __recipe_directory: str = ""
 
     def __init__(self, recipe_directory: str) -> None:
         """
@@ -22,6 +25,7 @@ class Recipe:
             recipe_directory (str): Directory containing recipe files
         """
         self.__recipe_directory = recipe_directory
+        self.__recipe_depth = 0
 
     def generate_recipe(self):
         """
@@ -60,6 +64,7 @@ class Recipe:
         self.__recipe["created_at"] = time.strftime("%Y년%m월%d일 %H시%M분%S초", time.localtime())
         self.__recipe["category"] = __parse_directory(self.__recipe_directory)
         self.__recipe["recipe_details"] = recipe_details
+        self.__recipe_depth = self.__calculate_recipe_depth()
 
     def import_recipe(self):
         """
@@ -69,12 +74,14 @@ class Recipe:
         try:
             with open(os.path.join(os.getcwd(), "cocktail_recipe.pkl"), "rb") as f:
                 self.__recipe = pickle.load(f)
+            self.__recipe_depth = self.__calculate_recipe_depth()
         except FileNotFoundError:
             self.__recipe = {
                 "created_at": "No recipe found",
                 "category": {},
                 "recipe_details": {}
             }
+            self.__recipe_depth = 0
 
     def export_recipe(self):
         """
@@ -83,6 +90,33 @@ class Recipe:
 
         with open(os.path.join(os.getcwd(), "cocktail_recipe.pkl"), "wb") as f:
             pickle.dump(self.__recipe, f)
+
+    def __calculate_recipe_depth(self):
+        """
+        Function to return the depth of the recipe dictionary
+
+        Returns:
+            int: Depth of the recipe dictionary
+        """
+
+        def __get_depth(dictionary: dict, depth: int = 0) -> int:
+            """
+            Function to return the depth of the dictionary
+
+            Args:
+                dictionary (dict): Dictionary to check the depth
+                depth (int): Depth of the dictionary
+
+            Returns:
+                int: Depth of the dictionary
+            """
+
+            if not isinstance(dictionary, dict):
+                return depth
+
+            return max(__get_depth(value, depth + 1) for value in dictionary.values())
+
+        return __get_depth(self.__recipe["category"])
 
     def get_category(self) -> dict:
         """
@@ -114,3 +148,12 @@ class Recipe:
         """
 
         return self.__recipe["recipe_details"][name]
+
+    def get_recipe_depth(self) -> int:
+        """
+        Function to return the depth of the recipe dictionary
+
+        Returns:
+            int: Depth of the recipe dictionary
+        """
+        return self.__recipe_depth
