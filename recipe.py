@@ -66,8 +66,15 @@ class Recipe:
         Function to import recipe dictionary from "cocktail_recipe.pkl" file
         """
 
-        with open(os.path.join(os.getcwd(), "cocktail_recipe.pkl"), "rb") as f:
-            self.__recipe = pickle.load(f)
+        try:
+            with open(os.path.join(os.getcwd(), "cocktail_recipe.pkl"), "rb") as f:
+                self.__recipe = pickle.load(f)
+        except FileNotFoundError:
+            self.__recipe = {
+                "created_at": "No recipe found",
+                "category": {},
+                "recipe_details": {}
+            }
 
     def export_recipe(self):
         """
