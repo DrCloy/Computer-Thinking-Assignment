@@ -13,7 +13,11 @@ class Recipe:
     """
 
     # Private attributes
-    __recipe: dict = {}
+    __recipe: dict = {
+        "created_at": "",
+        "category": {},
+        "recipe_details": {}
+    }
     __recipe_depth: int = 0
     __recipe_directory: str = ""
 
