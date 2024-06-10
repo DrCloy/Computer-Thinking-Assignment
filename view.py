@@ -31,9 +31,9 @@ class MainView:
         self.__root.title("Cocktail Recipe Application")
         self.__root.geometry(f"{self.__width + 2 * self.__padx}x{self.__height + 2 * 4 * self.__pady}")
         self.__root.resizable(False, False)
-        self.__root.grid_rowconfigure(0, weight=13)
-        self.__root.grid_rowconfigure(1, weight=3)
-        self.__root.grid_rowconfigure(2, weight=3)
+        self.__root.grid_rowconfigure(0, weight=30)
+        self.__root.grid_rowconfigure(1, weight=10)
+        self.__root.grid_rowconfigure(2, weight=10)
         self.__root.grid_rowconfigure(3, weight=1)
 
         self.__recipe_detail_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
@@ -61,22 +61,26 @@ class MainView:
 
         self.__control_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
         self.__control_frame.grid(row=3, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
-        self.__control_frame.grid_columnconfigure(0, weight=3)
+        self.__control_frame.grid_columnconfigure(0, weight=6)
         self.__control_frame.grid_columnconfigure(1, weight=1)
         self.__control_frame.grid_columnconfigure(2, weight=1)
         self.__control_frame.grid_columnconfigure(3, weight=1)
+        self.__control_frame.grid_columnconfigure(4, weight=1)
 
         self.__recipe_status_label = tk.Label(self.__control_frame, text="Please Import Recipe", font=("Helvetica", 20))
-        self.__recipe_status_label.grid(row=0, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
+        self.__recipe_status_label.grid(row=0, column=0, padx=self.__padx, pady=self.__pady, sticky="nsw")
 
         self.__import_button = tk.Button(self.__control_frame, text="Import", command=self.__import_recipe)
-        self.__import_button.grid(row=0, column=1, padx=self.__padx, pady=self.__pady, sticky="e")
+        self.__import_button.grid(row=0, column=1, padx=2, sticky="e")
 
         self.__export_button = tk.Button(self.__control_frame, text="Export", command=self.__export_recipe)
-        self.__export_button.grid(row=0, column=2, padx=self.__padx, pady=self.__pady, sticky="e")
+        self.__export_button.grid(row=0, column=2, padx=2, sticky="e")
 
         self.__generate_button = tk.Button(self.__control_frame, text="Generate", command=self.__generate_recipe)
-        self.__generate_button.grid(row=0, column=3, padx=self.__padx, pady=self.__pady, sticky="e")
+        self.__generate_button.grid(row=0, column=3, padx=2, sticky="e")
+
+        self.__exit_button = tk.Button(self.__control_frame, text="Exit", command=self.__root.quit)
+        self.__exit_button.grid(row=0, column=4, padx=2, sticky="e")
 
         self.__root.mainloop()
 
