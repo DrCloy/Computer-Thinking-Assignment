@@ -1,4 +1,6 @@
 import tkinter as tk
+import tkinter.scrolledtext as tkst
+import threading
 from recipe import Recipe
 
 
@@ -29,29 +31,77 @@ class MainView:
         self.__root.title("Cocktail Recipe Application")
         self.__root.geometry(f"{self.__width + 2 * self.__padx}x{self.__height + 2 * 4 * self.__pady}")
         self.__root.resizable(False, False)
+        self.__root.grid_rowconfigure(0, weight=4)
+        self.__root.grid_rowconfigure(1, weight=2)
+        self.__root.grid_rowconfigure(2, weight=2)
+        self.__root.grid_rowconfigure(3, weight=1)
 
-        self.__recipe_detail_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width, height=(self.__height // 7) * 4)
+        self.__recipe_detail_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
         self.__recipe_detail_frame.pack_propagate(False)
-        self.__recipe_detail_frame.pack(padx=self.__padx, pady=self.__pady, fill=tk.BOTH)
+        self.__recipe_detail_frame.grid(row=0, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
 
-        self.__recipe_detail_text = tk.Text(self.__recipe_detail_frame, wrap=tk.WORD, width=self.__width - self.__padx, height=((self.__height // 7) * 4 - 2 * self.__pady), state=tk.DISABLED)
-        self.__recipe_detail_text.place(relwidth=1, relheight=1)
-        # self.__recipe_detail_text.pack(padx=self.__padx, pady=self.__pady)
+        self.__recipe_detail_label = tk.Label(self.__recipe_detail_frame, text="Recipe Details", font=("Helvetica", 16, "bold"))
+        self.__recipe_detail_label.pack(pady=self.__pady)
 
-        self.__recipe_detail_scrollbar = tk.Scrollbar(self.__recipe_detail_frame, command=self.__recipe_detail_text.yview)
-        self.__recipe_detail_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.__recipe_detail_text.config(yscrollcommand=self.__recipe_detail_scrollbar.set)
+        # self.__recipe_detail_text = tk.Text(self.__recipe_detail_frame, wrap=tk.WORD, width=self.__width - self.__padx, height=((self.__height // 7) * 4 - 2 * self.__pady), state=tk.DISABLED)
+        # self.__recipe_detail_text.place(relwidth=1, relheight=1)
 
-        self.__category_select_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width, height=self.__height // 7)
-        self.__category_select_frame.pack(padx=self.__padx, pady=self.__pady, fill=tk.BOTH, expand=True)
+        # self.__recipe_detail_scrollbar = tk.Scrollbar(self.__recipe_detail_frame, command=self.__recipe_detail_text.yview)
+        # self.__recipe_detail_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        # self.__recipe_detail_text.config(yscrollcommand=self.__recipe_detail_scrollbar.set)
 
-        self.__category_manage_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width, height=self.__height // 7)
-        self.__category_manage_frame.pack(padx=self.__padx, pady=self.__pady, fill=tk.BOTH, expand=True)
+        self.__recipe_detail_text = tkst.ScrolledText(self.__recipe_detail_frame, wrap=tk.WORD, width=self.__width - self.__padx, state=tk.DISABLED, highlightbackground="white", highlightthickness=1)
+        self.__recipe_detail_text.pack(fill=tk.BOTH, expand=True)
 
-        self.__control_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width, height=self.__height // 7)
-        self.__control_frame.pack(padx=self.__padx, pady=self.__pady, fill=tk.BOTH, expand=True)
+        self.__category_select_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
+        # self.__category_select_frame.pack(padx=self.__padx, pady=self.__pady, fill=tk.BOTH, expand=True)
+        self.__category_select_frame.grid(row=1, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
+
+        self.__category_select_label = tk.Label(self.__category_select_frame, text="Select Category", anchor="w")
+        self.__category_select_label.pack(padx=self.__padx, pady=self.__pady, anchor="w")
+
+        self.__category_manage_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
+        # self.__category_manage_frame.pack(padx=self.__padx, pady=self.__pady, fill=tk.BOTH, expand=True)
+        self.__category_manage_frame.grid(row=2, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
+
+        self.__category_manage_label = tk.Label(self.__category_manage_frame, text="Manage Categories")
+        self.__category_manage_label.pack(padx=self.__padx, pady=self.__pady, anchor="w")
+
+        self.__control_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
+        # self.__control_frame.pack(padx=self.__padx, pady=self.__pady, fill=tk.BOTH, expand=True)
+        self.__control_frame.grid(row=3, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
+        self.__control_frame.grid_columnconfigure(0, weight=3)
+        self.__control_frame.grid_columnconfigure(1, weight=1)
+        self.__control_frame.grid_columnconfigure(2, weight=1)
+        self.__control_frame.grid_columnconfigure(3, weight=1)
+
+        self.__recipe_status_label = tk.Label(self.__control_frame, text="Please import recipe")
+        self.__recipe_status_label.grid(row=0, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
+
+        self.__import_button = tk.Button(self.__control_frame, text="Import", command=self.__import_recipe)
+        self.__import_button.grid(row=0, column=1, padx=self.__padx, pady=self.__pady, sticky="e")
+
+        self.__export_button = tk.Button(self.__control_frame, text="Export", command=self.__export_recipe)
+        self.__export_button.grid(row=0, column=2, padx=self.__padx, pady=self.__pady, sticky="e")
+
+        self.__generate_button = tk.Button(self.__control_frame, text="Generate", command=self.__generate_recipe)
+        self.__generate_button.grid(row=0, column=3, padx=self.__padx, pady=self.__pady, sticky="e")
 
         self.__root.mainloop()
+
+    def __import_recipe(self):
+        self.__recipe.import_recipe()
+        self.__recipe_status_label.config(text="Created At: " + self.__recipe.get_created_time())
+
+    def __export_recipe(self):
+        self.__recipe.export_recipe()
+        self.__recipe_status_label.config(text="Exported")
+        threading.Timer(3, lambda: self.__recipe_status_label.config(text="Created At: " + self.__recipe.get_created_time())).start()
+
+    def __generate_recipe(self):
+        self.__recipe.generate_recipe()
+        self.__recipe_status_label.config(text="Generated")
+        threading.Timer(3, lambda: self.__recipe_status_label.config(text="Created At: " + self.__recipe.get_created_time())).start()
 
 
 class InitView:
