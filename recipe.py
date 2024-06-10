@@ -38,7 +38,7 @@ class Recipe:
 
         recipe_details = {}
 
-        def __parse_directory(path: str):
+        def __parse_directory(path: str, recipe_details: dict = {}):
             """
             Function to parse directory and return a list of dictionaries
 
@@ -49,13 +49,12 @@ class Recipe:
                 Dictionary
             """
 
-            global recipe_details
             result = {}
             for entry in os.listdir(path):
                 full_path = os.path.join(path, entry)
 
                 if os.path.isdir(full_path):
-                    sub_result = __parse_directory(full_path)
+                    sub_result = __parse_directory(full_path, recipe_details)
                     result[entry] = sub_result
                 elif entry.endswith(".json"):
                     if isinstance(result, dict):
@@ -65,7 +64,7 @@ class Recipe:
                         recipe_details[entry[:-5]] = json.load(f)
             return result
 
-        self.__recipe["created_at"] = time.strftime("%Y-%m-%d %H:%M:%S:", time.localtime())
+        self.__recipe["created_at"] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         self.__recipe["category"] = __parse_directory(self.__recipe_directory)
         self.__recipe["recipe_details"] = recipe_details
         self.__recipe_depth = self.__calculate_recipe_depth()
