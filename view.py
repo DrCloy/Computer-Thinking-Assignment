@@ -11,11 +11,11 @@ class MainView:
 
     # Recipe class instance
     __recipe = None
-    __dropdown_width = None
     __width = 800
     __height = 600
     __padx = 10
     __pady = 5
+    __combobox_width = 30
 
     def __init__(self, recipe: Recipe) -> None:
         self.__recipe = recipe
