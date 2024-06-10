@@ -43,33 +43,23 @@ class MainView:
         self.__recipe_detail_label = tk.Label(self.__recipe_detail_frame, text="Recipe Details", font=("Helvetica", 16, "bold"))
         self.__recipe_detail_label.pack(pady=self.__pady)
 
-        # self.__recipe_detail_text = tk.Text(self.__recipe_detail_frame, wrap=tk.WORD, width=self.__width - self.__padx, height=((self.__height // 7) * 4 - 2 * self.__pady), state=tk.DISABLED)
-        # self.__recipe_detail_text.place(relwidth=1, relheight=1)
-
-        # self.__recipe_detail_scrollbar = tk.Scrollbar(self.__recipe_detail_frame, command=self.__recipe_detail_text.yview)
-        # self.__recipe_detail_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        # self.__recipe_detail_text.config(yscrollcommand=self.__recipe_detail_scrollbar.set)
-
         self.__recipe_detail_text = tkst.ScrolledText(self.__recipe_detail_frame, wrap=tk.WORD, width=self.__width - self.__padx, state=tk.DISABLED, highlightbackground="white", highlightthickness=1)
         self.__recipe_detail_text.config(cursor="arrow")
         self.__recipe_detail_text.pack(fill=tk.BOTH, expand=True)
 
         self.__category_select_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
-        # self.__category_select_frame.pack(padx=self.__padx, pady=self.__pady, fill=tk.BOTH, expand=True)
         self.__category_select_frame.grid(row=1, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
 
         self.__category_select_label = tk.Label(self.__category_select_frame, text="Select Category", anchor="w")
         self.__category_select_label.pack(padx=self.__padx, pady=self.__pady, anchor="w")
 
         self.__category_manage_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
-        # self.__category_manage_frame.pack(padx=self.__padx, pady=self.__pady, fill=tk.BOTH, expand=True)
         self.__category_manage_frame.grid(row=2, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
 
         self.__category_manage_label = tk.Label(self.__category_manage_frame, text="Manage Categories")
         self.__category_manage_label.pack(padx=self.__padx, pady=self.__pady, anchor="w")
 
         self.__control_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
-        # self.__control_frame.pack(padx=self.__padx, pady=self.__pady, fill=tk.BOTH, expand=True)
         self.__control_frame.grid(row=3, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
         self.__control_frame.grid_columnconfigure(0, weight=3)
         self.__control_frame.grid_columnconfigure(1, weight=1)
