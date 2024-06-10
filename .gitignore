@@ -3,3 +3,4 @@ memo*
 vscode/*
 test.py
 __pycache__/
+*.pkl
