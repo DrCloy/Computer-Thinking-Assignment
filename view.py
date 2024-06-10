@@ -116,6 +116,7 @@ class InitView:
 
         self.__text_input = tk.Entry(self.__root)
         self.__text_input.pack(pady=10)
+        self.__text_input.bind("<Return>", lambda _: self.__submit())
 
         self.__submit_button = tk.Button(self.__root, text="Submit", command=self.__submit)
         self.__submit_button.pack(pady=10)
