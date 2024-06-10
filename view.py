@@ -12,7 +12,7 @@ class MainView:
     # Recipe class instance
     __recipe = None
     __dropdown_width = None
-    __width = 900
+    __width = 800
     __height = 600
     __padx = 10
     __pady = 5
@@ -31,9 +31,9 @@ class MainView:
         self.__root.title("Cocktail Recipe Application")
         self.__root.geometry(f"{self.__width + 2 * self.__padx}x{self.__height + 2 * 4 * self.__pady}")
         self.__root.resizable(False, False)
-        self.__root.grid_rowconfigure(0, weight=4)
-        self.__root.grid_rowconfigure(1, weight=2)
-        self.__root.grid_rowconfigure(2, weight=2)
+        self.__root.grid_rowconfigure(0, weight=13)
+        self.__root.grid_rowconfigure(1, weight=3)
+        self.__root.grid_rowconfigure(2, weight=3)
         self.__root.grid_rowconfigure(3, weight=1)
 
         self.__recipe_detail_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
@@ -51,6 +51,7 @@ class MainView:
         # self.__recipe_detail_text.config(yscrollcommand=self.__recipe_detail_scrollbar.set)
 
         self.__recipe_detail_text = tkst.ScrolledText(self.__recipe_detail_frame, wrap=tk.WORD, width=self.__width - self.__padx, state=tk.DISABLED, highlightbackground="white", highlightthickness=1)
+        self.__recipe_detail_text.config(cursor="arrow")
         self.__recipe_detail_text.pack(fill=tk.BOTH, expand=True)
 
         self.__category_select_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
@@ -75,7 +76,7 @@ class MainView:
         self.__control_frame.grid_columnconfigure(2, weight=1)
         self.__control_frame.grid_columnconfigure(3, weight=1)
 
-        self.__recipe_status_label = tk.Label(self.__control_frame, text="Please import recipe")
+        self.__recipe_status_label = tk.Label(self.__control_frame, text="Please Import Recipe", font=("Helvetica", 20))
         self.__recipe_status_label.grid(row=0, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
 
         self.__import_button = tk.Button(self.__control_frame, text="Import", command=self.__import_recipe)
