@@ -37,9 +37,10 @@ class MainView:
         self.__root.geometry(f"{self.__width + 2 * self.__padx}x{self.__height + 2 * 4 * self.__pady}")
         self.__root.resizable(False, False)
         self.__root.grid_rowconfigure(0, weight=30)
-        self.__root.grid_rowconfigure(1, weight=10)
-        self.__root.grid_rowconfigure(2, weight=10)
-        self.__root.grid_rowconfigure(3, weight=1)
+        self.__root.grid_rowconfigure(1, weight=7)
+        self.__root.grid_rowconfigure(2, weight=7)
+        self.__root.grid_rowconfigure(3, weight=7)
+        self.__root.grid_rowconfigure(4, weight=1)
 
         self.__recipe_detail_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
         self.__recipe_detail_frame.pack_propagate(False)
@@ -53,16 +54,29 @@ class MainView:
         self.__recipe_detail_text.pack(fill=tk.BOTH, expand=True)
 
         self.__category_select_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
+        self.__category_select_frame.pack_propagate(False)
         self.__category_select_frame.grid(row=1, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
 
         self.__category_select_label = tk.Label(self.__category_select_frame, text="Select Category", anchor="w")
         self.__category_select_label.pack(padx=self.__padx, pady=self.__pady, anchor="w")
 
         self.__category_manage_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
+        self.__category_manage_frame.pack_propagate(False)
         self.__category_manage_frame.grid(row=2, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
 
         self.__category_manage_label = tk.Label(self.__category_manage_frame, text="Manage Categories")
         self.__category_manage_label.pack(padx=self.__padx, pady=self.__pady, anchor="w")
+        
+        self.__recipe_select_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
+        self.__recipe_select_frame.pack_propagate(False)
+        self.__recipe_select_frame.grid(row=3, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
+        
+        self.__recipe_select_label = tk.Label(self.__recipe_select_frame, text="Select Recipe")
+        self.__recipe_select_label.pack(padx=self.__padx, pady=self.__pady, anchor="w")
+        
+        self.__recipe_select_combobox = ttk.Combobox(self.__recipe_select_frame, values=['--Select--'], width=self.__combobox_width)
+        self.__recipe_select_combobox.set("--Select--")
+        self.__recipe_select_combobox.pack(padx=self.__padx, pady=self.__pady, side=tk.LEFT)
 
         self.__control_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
         self.__control_frame.grid(row=3, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
@@ -108,7 +122,7 @@ class MainView:
     def __add_combobox(self, data: dict):
         combobox = ttk.Combobox(self.__category_select_frame, values=['--Select--'] + list(data.keys()), width=self.__combobox_width)
         combobox.set("--Select--")
-        combobox.pack(pady=self.__pady, side=tk.LEFT)
+        combobox.pack(padx=self.__padx, pady=self.__pady, side=tk.LEFT)
         combobox.bind("<<ComboboxSelected>>", lambda event: self.__on_combobox_select(event, data))
         self.__combobox_list.append(combobox)
 
@@ -135,7 +149,6 @@ class MainView:
             self.__add_add_button()
 
     def __import_recipe(self):
-        print("Import")
         try:
             if not self.__recipe:
                 return
@@ -144,6 +157,8 @@ class MainView:
             for combobox in self.__combobox_list:
                 combobox.destroy()
             self.__combobox_list = []
+            if self.__add_button:
+                self.__add_button.destroy()
             self.__category_selected = []
             self.__add_button = None
             self.__add_combobox(self.__recipe.get_category())
@@ -154,7 +169,6 @@ class MainView:
 
     def __export_recipe(self):
         try:
-            print("Export")
             self.__recipe.export_recipe()
             self.__status_label.config(text="Exported")
             threading.Timer(3, lambda: self.__status_label.config(text="Created At: " + self.__recipe.get_created_time())).start()
@@ -165,7 +179,6 @@ class MainView:
 
     def __generate_recipe(self):
         try:
-            print("Generate")
             self.__recipe.generate_recipe()
             self.__status_label.config(text="Generated")
             threading.Timer(3, lambda: self.__status_label.config(text="Created At: " + self.__recipe.get_created_time())).start()
