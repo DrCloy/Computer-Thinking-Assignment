@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.scrolledtext as tkst
 import tkinter.ttk as ttk
 import threading
+import traceback
 from recipe import Recipe
 
 
@@ -130,32 +131,48 @@ class MainView:
         next_data = data[selected_key]
         if isinstance(next_data, dict):
             self.__add_combobox(next_data)
-        elif isinstance(next_data, list):
+        else:
             self.__add_add_button()
 
     def __import_recipe(self):
+        print("Import")
         try:
             if not self.__recipe:
                 return
             self.__recipe.import_recipe()
             self.__status_label.config(text="Created At: " + self.__recipe.get_created_time())
+            for combobox in self.__combobox_list:
+                combobox.destroy()
             self.__combobox_list = []
             self.__category_selected = []
             self.__add_button = None
             self.__add_combobox(self.__recipe.get_category())
         except Exception as e:
             print(e)
+            traceback.print_exc()
             self.__status_label.config(text="Error")
 
     def __export_recipe(self):
-        self.__recipe.export_recipe()
-        self.__status_label.config(text="Exported")
-        threading.Timer(3, lambda: self.__status_label.config(text="Created At: " + self.__recipe.get_created_time())).start()
+        try:
+            print("Export")
+            self.__recipe.export_recipe()
+            self.__status_label.config(text="Exported")
+            threading.Timer(3, lambda: self.__status_label.config(text="Created At: " + self.__recipe.get_created_time())).start()
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
+            self.__status_label.config(text="Error")
 
     def __generate_recipe(self):
-        self.__recipe.generate_recipe()
-        self.__status_label.config(text="Generated")
-        threading.Timer(3, lambda: self.__status_label.config(text="Created At: " + self.__recipe.get_created_time())).start()
+        try:
+            print("Generate")
+            self.__recipe.generate_recipe()
+            self.__status_label.config(text="Generated")
+            threading.Timer(3, lambda: self.__status_label.config(text="Created At: " + self.__recipe.get_created_time())).start()
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
+            self.__status_label.config(text="Error")
 
 
 class InitView:
@@ -175,7 +192,8 @@ class InitView:
 
         self.__text_input = tk.Entry(self.__root)
         self.__text_input.pack(pady=10)
-        self.__text_input.bind("<Return>", lambda _: self.__submit())
+        self.__text_input.focus()
+        self.__text_input.bind("<Return>", lambda event: self.__submit())
 
         self.__submit_button = tk.Button(self.__root, text="Submit", command=self.__submit)
         self.__submit_button.pack(pady=10)
@@ -189,10 +207,13 @@ class InitView:
         self.__root.destroy()
 
     def __submit(self):
-        self.__root_directory = self.__text_input.get()
-        if not self.__root_directory:
-            return
-        self.__root.destroy()
+        try:
+            self.__root_directory = self.__text_input.get()
+            if not self.__root_directory:
+                return
+            self.__root.destroy()
+        except Exception as e:
+            print(e)
 
     def get_root_directory(self):
         return self.__root_directory
