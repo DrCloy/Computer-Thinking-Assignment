@@ -67,6 +67,13 @@ class MainView:
         self.__category_manage_label = tk.Label(self.__category_manage_frame, text="Manage Categories")
         self.__category_manage_label.pack(padx=self.__padx, pady=self.__pady, anchor="w")
         
+        self.__category_combobox = ttk.Combobox(self.__category_manage_frame, values=['--Select--'], width=self.__combobox_width)
+        self.__category_combobox.set("--Select--")
+        self.__category_combobox.pack(padx=self.__padx, pady=self.__pady, side=tk.LEFT)
+        
+        self.__category_delete_button = tk.Button(self.__category_manage_frame, text="Delete", state=tk.DISABLED)
+        self.__category_delete_button.pack(padx=self.__padx, pady=self.__pady, side=tk.LEFT)
+        
         self.__recipe_select_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
         self.__recipe_select_frame.pack_propagate(False)
         self.__recipe_select_frame.grid(row=3, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
@@ -79,7 +86,7 @@ class MainView:
         self.__recipe_select_combobox.pack(padx=self.__padx, pady=self.__pady, side=tk.LEFT)
 
         self.__control_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
-        self.__control_frame.grid(row=3, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
+        self.__control_frame.grid(row=4, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
         self.__control_frame.grid_columnconfigure(0, weight=6)
         self.__control_frame.grid_columnconfigure(1, weight=1)
         self.__control_frame.grid_columnconfigure(2, weight=1)
