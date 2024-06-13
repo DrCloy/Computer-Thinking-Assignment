@@ -19,7 +19,7 @@ class MainView:
     __pady = 5
     __combobox_width = 10
     __combobox_list = []
-    __category_selected = []
+    __category_selected = set()
     __add_button = None
 
     def __init__(self, recipe: Recipe) -> None:
@@ -66,22 +66,22 @@ class MainView:
 
         self.__category_manage_label = tk.Label(self.__category_manage_frame, text="Manage Categories")
         self.__category_manage_label.pack(padx=self.__padx, pady=self.__pady, anchor="w")
-        
-        self.__category_combobox = ttk.Combobox(self.__category_manage_frame, values=['--Select--'], width=self.__combobox_width)
+
+        self.__category_combobox = ttk.Combobox(self.__category_manage_frame, values=['--Select--'], width=self.__combobox_width, state="disabled")
         self.__category_combobox.set("--Select--")
         self.__category_combobox.pack(padx=self.__padx, pady=self.__pady, side=tk.LEFT)
-        
-        self.__category_delete_button = tk.Button(self.__category_manage_frame, text="Delete", state=tk.DISABLED)
+
+        self.__category_delete_button = tk.Button(self.__category_manage_frame, text="Delete", state=tk.DISABLED, command=self.__delete_selected_category)
         self.__category_delete_button.pack(padx=self.__padx, pady=self.__pady, side=tk.LEFT)
-        
+
         self.__recipe_select_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
         self.__recipe_select_frame.pack_propagate(False)
         self.__recipe_select_frame.grid(row=3, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
-        
+
         self.__recipe_select_label = tk.Label(self.__recipe_select_frame, text="Select Recipe")
         self.__recipe_select_label.pack(padx=self.__padx, pady=self.__pady, anchor="w")
-        
-        self.__recipe_select_combobox = ttk.Combobox(self.__recipe_select_frame, values=['--Select--'], width=self.__combobox_width)
+
+        self.__recipe_select_combobox = ttk.Combobox(self.__recipe_select_frame, values=['--Select--'], width=self.__combobox_width, state="disabled")
         self.__recipe_select_combobox.set("--Select--")
         self.__recipe_select_combobox.pack(padx=self.__padx, pady=self.__pady, side=tk.LEFT)
 
@@ -109,7 +109,7 @@ class MainView:
         self.__exit_button.grid(row=0, column=4, padx=2, sticky="e")
 
         self.__root.protocol("WM_DELETE_WINDOW", self.__root.quit)
-        self.__root.after(2000, self.__escape_loading_state)
+        self.__root.after(1000, self.__escape_loading_state)
         self.__root.mainloop()
 
     def __escape_loading_state(self):
@@ -127,7 +127,7 @@ class MainView:
             self.__add_button.destroy()
 
     def __add_combobox(self, data: dict):
-        combobox = ttk.Combobox(self.__category_select_frame, values=['--Select--'] + list(data.keys()), width=self.__combobox_width)
+        combobox = ttk.Combobox(self.__category_select_frame, values=['--Select--'] + list(data.keys()), width=self.__combobox_width, state="readonly")
         combobox.set("--Select--")
         combobox.pack(padx=self.__padx, pady=self.__pady, side=tk.LEFT)
         combobox.bind("<<ComboboxSelected>>", lambda event: self.__on_combobox_select(event, data))
@@ -137,7 +137,16 @@ class MainView:
         keys = []
         for combobox in self.__combobox_list:
             keys.append(combobox.get())
-        self.__category_selected.append('-'.join(keys))
+        if "--Select--" in keys:
+            return
+        if '-'.join(keys) in self.__category_selected:
+            return
+        self.__category_selected.add('-'.join(keys))
+        self.__update_category_select_combobox()
+        self.__reset_after_combobox(self.__combobox_list[0])
+        self.__combobox_list[0].set("--Select--")
+        if self.__category_delete_button.cget("state") == tk.DISABLED:
+            self.__category_delete_button.config(state=tk.NORMAL)
 
     def __add_add_button(self):
         self.__add_button = tk.Button(self.__category_select_frame, text="Add", command=lambda: self.__add_category())
@@ -155,6 +164,20 @@ class MainView:
         else:
             self.__add_add_button()
 
+    def __update_category_select_combobox(self):
+        self.__category_combobox.config(values=['--Select--'] + sorted(list(self.__category_selected)))
+        self.__category_combobox.set("--Select--")
+
+    def __delete_selected_category(self):
+        selected_key = self.__category_combobox.get()
+        if selected_key == "--Select--":
+            return
+        self.__category_selected.remove(selected_key)
+        self.__update_category_select_combobox()
+
+        if not self.__category_selected:
+            self.__category_delete_button.config(state=tk.DISABLED)
+
     def __import_recipe(self):
         try:
             if not self.__recipe:
@@ -166,9 +189,11 @@ class MainView:
             self.__combobox_list = []
             if self.__add_button:
                 self.__add_button.destroy()
-            self.__category_selected = []
+            self.__category_selected = set()
             self.__add_button = None
             self.__add_combobox(self.__recipe.get_category())
+            self.__category_combobox.config(state="readonly", width=self.__combobox_width * self.__recipe.get_recipe_depth())
+            self.__recipe_select_combobox.config(state="readonly")
         except Exception as e:
             print(e)
             traceback.print_exc()
