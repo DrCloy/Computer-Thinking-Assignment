@@ -277,7 +277,7 @@ class MainView:
 
         self.__recipe_detail_text.insert(tk.END, f"Ingredients\n", 'mid')
         for key, value in recipe['ingredients'].items():
-            self.__recipe_detail_text.insert(tk.END, f"{key.capitalize()}: {value['quantity']} {value['unit']}\n", 'small')
+            self.__recipe_detail_text.insert(tk.END, f"{key.capitalize()} {value['quantity']} {value['unit']}\n", 'small')
         self.__recipe_detail_text.insert(tk.END, f"\n", 'mid')
 
         self.__recipe_detail_text.insert(tk.END, f"Recipe\n", 'mid')
