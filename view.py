@@ -37,16 +37,16 @@ class MainView:
         self.__root.geometry(f"{self.__width + 2 * self.__padx}x{self.__height + 2 * 4 * self.__pady}")
         self.__root.resizable(False, False)
         self.__root.grid_rowconfigure(0, weight=30)
-        self.__root.grid_rowconfigure(1, weight=8)
-        self.__root.grid_rowconfigure(2, weight=8)
-        self.__root.grid_rowconfigure(3, weight=14)
-        self.__root.grid_rowconfigure(4, weight=1)
+        self.__root.grid_rowconfigure(1, weight=10)
+        self.__root.grid_rowconfigure(2, weight=10)
+        self.__root.grid_rowconfigure(3, weight=20)
+        self.__root.grid_rowconfigure(4, weight=5)
 
         self.__recipe_detail_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
         self.__recipe_detail_frame.pack_propagate(False)
         self.__recipe_detail_frame.grid(row=0, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
 
-        self.__recipe_detail_label = tk.Label(self.__recipe_detail_frame, text="Recipe Details", font=("Helvetica", 16, "bold"))
+        self.__recipe_detail_label = tk.Label(self.__recipe_detail_frame, text="Recipe Details", font=("Helvetica", 20, "bold"))
         self.__recipe_detail_label.pack(pady=self.__pady)
 
         self.__recipe_detail_text = tkst.ScrolledText(self.__recipe_detail_frame, wrap=tk.WORD, width=self.__width - self.__padx, state=tk.DISABLED, highlightbackground="white", highlightthickness=1)
@@ -57,14 +57,14 @@ class MainView:
         self.__category_select_frame.pack_propagate(False)
         self.__category_select_frame.grid(row=1, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
 
-        self.__category_select_label = tk.Label(self.__category_select_frame, text="Select Category", anchor="w")
+        self.__category_select_label = tk.Label(self.__category_select_frame, text="Select Category", anchor="w", font=("Helvetica", 16, "bold"))
         self.__category_select_label.pack(padx=self.__padx, pady=self.__pady, anchor="w")
 
         self.__category_manage_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
         self.__category_manage_frame.pack_propagate(False)
         self.__category_manage_frame.grid(row=2, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
 
-        self.__category_manage_label = tk.Label(self.__category_manage_frame, text="Manage Categories")
+        self.__category_manage_label = tk.Label(self.__category_manage_frame, text="Manage Categories", font=("Helvetica", 16, "bold"))
         self.__category_manage_label.pack(padx=self.__padx, pady=self.__pady, anchor="w")
 
         self.__category_combobox = ttk.Combobox(self.__category_manage_frame, values=['--Select--'], width=self.__combobox_width, state="disabled")
@@ -75,38 +75,55 @@ class MainView:
         self.__category_delete_button.pack(padx=self.__padx, pady=self.__pady, side=tk.LEFT)
 
         self.__recipe_select_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
-        self.__recipe_select_frame.pack_propagate(False)
+        self.__recipe_select_frame.grid_propagate(False)
         self.__recipe_select_frame.grid(row=3, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
 
-        self.__recipe_select_label = tk.Label(self.__recipe_select_frame, text="Select Recipe")
-        self.__recipe_select_label.pack(padx=self.__padx, pady=self.__pady, anchor="w")
+        self.__recipe_select_label = tk.Label(self.__recipe_select_frame, text="Select Recipe", font=("Helvetica", 13, "bold"))
+        self.__recipe_select_label.grid(row=0, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
+
+        self.__recipe_option_label = tk.Label(self.__recipe_select_frame, text="Option", font=("Helvetica", 13, "bold"))
+        self.__recipe_option_label.grid(row=1, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
+
+        self.__recipe_option_preparation_label = tk.Label(self.__recipe_select_frame, text="Preparation")
+        self.__recipe_option_preparation_label.grid(row=2, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
+        self.__recipe_option_preparation = tk.IntVar()
+        self.__recipe_option_preparation.set(0)
+        self.__recipe_option_exist = tk.Radiobutton(self.__recipe_select_frame, text="Exist", variable=self.__recipe_option_preparation, value=0)
+        self.__recipe_option_exist.grid(row=2, column=1, padx=self.__padx, pady=self.__pady, sticky="w")
+        self.__recipe_option_full = tk.Radiobutton(self.__recipe_select_frame, text="Full", variable=self.__recipe_option_preparation, value=1)
+        self.__recipe_option_full.grid(row=2, column=2, padx=self.__padx, pady=self.__pady, sticky="w")
 
         self.__recipe_select_combobox = ttk.Combobox(self.__recipe_select_frame, values=['--Select--'], width=self.__combobox_width, state="disabled")
         self.__recipe_select_combobox.set("--Select--")
-        self.__recipe_select_combobox.pack(padx=self.__padx, pady=self.__pady, side=tk.LEFT)
+        self.__recipe_select_combobox.grid(row=3, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
 
         self.__control_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
         self.__control_frame.grid(row=4, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
-        self.__control_frame.grid_columnconfigure(0, weight=6)
+        self.__control_frame.grid_propagate(False)
+        self.__control_frame.grid_columnconfigure(0, weight=1)
         self.__control_frame.grid_columnconfigure(1, weight=1)
-        self.__control_frame.grid_columnconfigure(2, weight=1)
-        self.__control_frame.grid_columnconfigure(3, weight=1)
-        self.__control_frame.grid_columnconfigure(4, weight=1)
 
         self.__status_label = tk.Label(self.__control_frame, text="Loading...", font=("Helvetica", 20))
         self.__status_label.grid(row=0, column=0, padx=self.__padx, pady=self.__pady, sticky="nsw")
 
-        self.__import_button = tk.Button(self.__control_frame, text="Import", command=self.__import_recipe, state=tk.DISABLED)
-        self.__import_button.grid(row=0, column=1, padx=2, sticky="e")
+        self.__control_button_frame = tk.Frame(self.__control_frame)
+        self.__control_button_frame.grid(row=0, column=1, padx=self.__padx, pady=self.__pady, sticky="nse")
+        self.__control_button_frame.grid_columnconfigure(0, weight=1)
+        self.__control_button_frame.grid_columnconfigure(1, weight=1)
+        self.__control_button_frame.grid_columnconfigure(2, weight=1)
+        self.__control_button_frame.grid_columnconfigure(3, weight=1)
 
-        self.__export_button = tk.Button(self.__control_frame, text="Export", command=self.__export_recipe, state=tk.DISABLED)
-        self.__export_button.grid(row=0, column=2, padx=2, sticky="e")
+        self.__import_button = tk.Button(self.__control_button_frame, text="Import", command=self.__import_recipe, state=tk.DISABLED)
+        self.__import_button.grid(row=0, column=0, padx=2, sticky="e")
 
-        self.__generate_button = tk.Button(self.__control_frame, text="Generate", command=self.__generate_recipe, state=tk.DISABLED)
-        self.__generate_button.grid(row=0, column=3, padx=2, sticky="e")
+        self.__export_button = tk.Button(self.__control_button_frame, text="Export", command=self.__export_recipe, state=tk.DISABLED)
+        self.__export_button.grid(row=0, column=1, padx=2, sticky="e")
 
-        self.__exit_button = tk.Button(self.__control_frame, text="Exit", command=self.__root.quit)
-        self.__exit_button.grid(row=0, column=4, padx=2, sticky="e")
+        self.__generate_button = tk.Button(self.__control_button_frame, text="Generate", command=self.__generate_recipe, state=tk.DISABLED)
+        self.__generate_button.grid(row=0, column=2, padx=2, sticky="e")
+
+        self.__exit_button = tk.Button(self.__control_button_frame, text="Exit", command=self.__root.quit)
+        self.__exit_button.grid(row=0, column=3, padx=2, sticky="e")
 
         self.__root.protocol("WM_DELETE_WINDOW", self.__root.quit)
         self.__root.after(1000, self.__escape_loading_state)
