@@ -12,7 +12,6 @@ if __name__ == "__main__":
             break
 
     root_directory = init_view.get_root_directory()
-    print(root_directory)
 
     recipe = Recipe(root_directory)
 
