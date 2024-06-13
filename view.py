@@ -96,29 +96,30 @@ class MainView:
         self.__recipe_option_full = tk.Radiobutton(self.__recipe_select_frame, text="Full", variable=self.__recipe_option_preparation, value=1, state=tk.DISABLED)
         self.__recipe_option_full.grid(row=2, column=2, padx=self.__padx, pady=self.__pady, sticky="w")
 
-        self.__recipe_option_type_label = tk.Label(self.__recipe_select_frame, text="Type")
-        self.__recipe_option_type_label.grid(row=3, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
+        self.__recipe_option_style_label = tk.Label(self.__recipe_select_frame, text="style")
+        self.__recipe_option_style_label.grid(row=3, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
 
-        self.__recipe_type = {
-            "stir": tk.BooleanVar(),
-            "shake": tk.BooleanVar(),
+        self.__recipe_style = {
+            "stirred": tk.BooleanVar(),
+            "shaken": tk.BooleanVar(),
             "top": tk.BooleanVar()
         }
 
-        self.__recipe_option_stir = tk.Checkbutton(self.__recipe_select_frame, text="Stirred", variable=self.__recipe_type['stir'], onvalue=True, offvalue=False, state=tk.DISABLED)
+        self.__recipe_option_stir = tk.Checkbutton(self.__recipe_select_frame, text="Stirred", variable=self.__recipe_style['stirred'], onvalue=True, offvalue=False, state=tk.DISABLED)
         self.__recipe_option_stir.grid(row=3, column=1, padx=self.__padx, pady=self.__pady, sticky="w")
 
-        self.__recipe_option_shake = tk.Checkbutton(self.__recipe_select_frame, text="Shaken", variable=self.__recipe_type['shake'], onvalue=True, offvalue=False, state=tk.DISABLED)
+        self.__recipe_option_shake = tk.Checkbutton(self.__recipe_select_frame, text="Shaken", variable=self.__recipe_style['shaken'], onvalue=True, offvalue=False, state=tk.DISABLED)
         self.__recipe_option_shake.grid(row=3, column=2, padx=self.__padx, pady=self.__pady, sticky="w")
 
-        self.__recipe_option_top = tk.Checkbutton(self.__recipe_select_frame, text="Top", variable=self.__recipe_type['top'], onvalue=True, offvalue=False, state=tk.DISABLED)
+        self.__recipe_option_top = tk.Checkbutton(self.__recipe_select_frame, text="Top", variable=self.__recipe_style['top'], onvalue=True, offvalue=False, state=tk.DISABLED)
         self.__recipe_option_top.grid(row=3, column=3, padx=self.__padx, pady=self.__pady, sticky="w")
 
-        self.__recipe_search_button = tk.Button(self.__recipe_select_frame, text="Search", state=tk.DISABLED)
+        self.__recipe_search_button = tk.Button(self.__recipe_select_frame, text="Search", state=tk.DISABLED, command=self.__search_recipes)
         self.__recipe_search_button.grid(row=4, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
 
         self.__recipe_select_combobox = ttk.Combobox(self.__recipe_select_frame, values=['--Select--'], width=self.__combobox_width, state="disabled")
         self.__recipe_select_combobox.set("--Select--")
+        self.__recipe_select_combobox.bind("<<ComboboxSelected>>", self.__on_recipe_select)
         self.__recipe_select_combobox.grid(row=5, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
 
         self.__control_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
@@ -219,7 +220,39 @@ class MainView:
         if not self.__category_selected:
             self.__category_delete_button.config(state=tk.DISABLED)
 
-        print(self.__recipe_type)
+        print(self.__recipe_style)
+
+    def __search_recipes(self):
+        # self.__recipe_select_combobox.config(values=['--Select--'] + self.__recipe.get_recipe_list(self.__category_selected))
+        self.__recipe_select_combobox.config(values=['--Select--', 'Martini', 'Old Fashioned'])
+        pass
+
+    def __on_recipe_select(self, event):
+        cocktail_name = event.widget.get()
+        print(cocktail_name)
+        if cocktail_name == "--Select--":
+            return
+        recipe = self.__recipe.get_recipe_detail(cocktail_name)
+
+        self.__recipe_detail_text.config(state=tk.NORMAL)
+
+        self.__recipe_detail_text.insert(tk.END, f"{cocktail_name}\n", 'big')
+        self.__recipe_detail_text.insert(tk.END, f"\n", 'mid')
+
+        self.__recipe_detail_text.insert(tk.END, f"Ingredients\n", 'mid')
+        for key, value in recipe['ingredients'].items():
+            self.__recipe_detail_text.insert(tk.END, f"{key.capitalize()}: {value['quantity']} {value['unit']}\n", 'small')
+        self.__recipe_detail_text.insert(tk.END, f"\n", 'mid')
+
+        self.__recipe_detail_text.insert(tk.END, f"Recipe\n", 'mid')
+        for i, step in enumerate(recipe['recipe']):
+            self.__recipe_detail_text.insert(tk.END, f"{i + 1}. {step}\n", 'small')
+
+        self.__recipe_detail_text.tag_config('big', font=('Helvetica', 25, 'bold'))
+        self.__recipe_detail_text.tag_config('mid', font=('Helvetica', 20, 'bold'))
+        self.__recipe_detail_text.tag_config('small', font=('Helvetica', 15))
+
+        self.__recipe_detail_text.config(state=tk.DISABLED)
 
     def __import_recipe(self):
         try:
@@ -243,6 +276,7 @@ class MainView:
             self.__recipe_option_stir.config(state=tk.NORMAL)
             self.__recipe_option_shake.config(state=tk.NORMAL)
             self.__recipe_option_top.config(state=tk.NORMAL)
+            self.__recipe_search_button.config(state=tk.NORMAL)
         except Exception as e:
             print(e)
             traceback.print_exc()
