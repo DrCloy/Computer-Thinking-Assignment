@@ -144,6 +144,15 @@ class Recipe:
         """
         return self.__recipe["created_at"]
 
+    def get_all_recipe_names(self) -> list:
+        """
+        Function to return all the recipe names
+
+        Returns:
+            list: List of recipe names
+        """
+        return list(self.__recipe["recipe_details"].keys())
+
     def get_recipe_detail(self, name: str) -> dict:
         """
         Function to find cocktail recipe by name and return the recipe details
