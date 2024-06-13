@@ -220,21 +220,37 @@ class MainView:
         if not self.__category_selected:
             self.__category_delete_button.config(state=tk.DISABLED)
 
-        print(self.__recipe_style)
-
     def __search_recipes(self):
-        # self.__recipe_select_combobox.config(values=['--Select--'] + self.__recipe.get_recipe_list(self.__category_selected))
-        self.__recipe_select_combobox.config(values=['--Select--', 'Martini', 'Old Fashioned'])
-        pass
+        recipe_set = set()
+        if self.__recipe_option_preparation.get() == 0:
+            for category in self.__category_selected:
+                keys = list(category.split('-'))
+                data = self.__recipe.get_category()[keys[0]]
+                for key in keys[1:]:
+                    data = data[key]
+                recipe_set.update(data)
+
+        filtered_recipe = []
+        for recipe in recipe_set:
+            recipe_detail = self.__recipe.get_recipe_detail(recipe)
+            if self.__recipe_style['stirred'].get() and 'stirred' not in recipe_detail['style']:
+                continue
+            if self.__recipe_style['shaken'].get() and 'shaken' not in recipe_detail['style']:
+                continue
+            if self.__recipe_style['top'].get() and 'top' not in recipe_detail['style']:
+                continue
+            filtered_recipe.append(recipe)
+
+        self.__recipe_select_combobox.config(values=['--Select--'] + sorted(filtered_recipe))
 
     def __on_recipe_select(self, event):
         cocktail_name = event.widget.get()
-        print(cocktail_name)
         if cocktail_name == "--Select--":
             return
         recipe = self.__recipe.get_recipe_detail(cocktail_name)
 
         self.__recipe_detail_text.config(state=tk.NORMAL)
+        self.__recipe_detail_text.delete(1.0, tk.END)
 
         self.__recipe_detail_text.insert(tk.END, f"{cocktail_name}\n", 'big')
         self.__recipe_detail_text.insert(tk.END, f"\n", 'mid')
