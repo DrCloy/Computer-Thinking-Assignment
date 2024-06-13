@@ -39,7 +39,7 @@ class MainView:
         self.__root.grid_rowconfigure(0, weight=30)
         self.__root.grid_rowconfigure(1, weight=10)
         self.__root.grid_rowconfigure(2, weight=10)
-        self.__root.grid_rowconfigure(3, weight=20)
+        self.__root.grid_rowconfigure(3, weight=25)
         self.__root.grid_rowconfigure(4, weight=5)
 
         self.__recipe_detail_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
@@ -86,16 +86,37 @@ class MainView:
 
         self.__recipe_option_preparation_label = tk.Label(self.__recipe_select_frame, text="Preparation")
         self.__recipe_option_preparation_label.grid(row=2, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
+
         self.__recipe_option_preparation = tk.IntVar()
         self.__recipe_option_preparation.set(0)
-        self.__recipe_option_exist = tk.Radiobutton(self.__recipe_select_frame, text="Exist", variable=self.__recipe_option_preparation, value=0)
+
+        self.__recipe_option_exist = tk.Radiobutton(self.__recipe_select_frame, text="Exist", variable=self.__recipe_option_preparation, value=0, state=tk.DISABLED)
         self.__recipe_option_exist.grid(row=2, column=1, padx=self.__padx, pady=self.__pady, sticky="w")
-        self.__recipe_option_full = tk.Radiobutton(self.__recipe_select_frame, text="Full", variable=self.__recipe_option_preparation, value=1)
+
+        self.__recipe_option_full = tk.Radiobutton(self.__recipe_select_frame, text="Full", variable=self.__recipe_option_preparation, value=1, state=tk.DISABLED)
         self.__recipe_option_full.grid(row=2, column=2, padx=self.__padx, pady=self.__pady, sticky="w")
+
+        self.__recipe_option_type_label = tk.Label(self.__recipe_select_frame, text="Type")
+        self.__recipe_option_type_label.grid(row=3, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
+
+        self.__recipe_type = {
+            "stir": tk.BooleanVar(),
+            "shake": tk.BooleanVar(),
+            "top": tk.BooleanVar()
+        }
+
+        self.__recipe_option_stir = tk.Checkbutton(self.__recipe_select_frame, text="Stirred", variable=self.__recipe_type['stir'], onvalue=True, offvalue=False, state=tk.DISABLED)
+        self.__recipe_option_stir.grid(row=3, column=1, padx=self.__padx, pady=self.__pady, sticky="w")
+
+        self.__recipe_option_shake = tk.Checkbutton(self.__recipe_select_frame, text="Shaken", variable=self.__recipe_type['shake'], onvalue=True, offvalue=False, state=tk.DISABLED)
+        self.__recipe_option_shake.grid(row=3, column=2, padx=self.__padx, pady=self.__pady, sticky="w")
+
+        self.__recipe_option_top = tk.Checkbutton(self.__recipe_select_frame, text="Top", variable=self.__recipe_type['top'], onvalue=True, offvalue=False, state=tk.DISABLED)
+        self.__recipe_option_top.grid(row=3, column=3, padx=self.__padx, pady=self.__pady, sticky="w")
 
         self.__recipe_select_combobox = ttk.Combobox(self.__recipe_select_frame, values=['--Select--'], width=self.__combobox_width, state="disabled")
         self.__recipe_select_combobox.set("--Select--")
-        self.__recipe_select_combobox.grid(row=3, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
+        self.__recipe_select_combobox.grid(row=4, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
 
         self.__control_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
         self.__control_frame.grid(row=4, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
@@ -195,6 +216,8 @@ class MainView:
         if not self.__category_selected:
             self.__category_delete_button.config(state=tk.DISABLED)
 
+        print(self.__recipe_type)
+
     def __import_recipe(self):
         try:
             if not self.__recipe:
@@ -211,6 +234,12 @@ class MainView:
             self.__add_combobox(self.__recipe.get_category())
             self.__category_combobox.config(state="readonly", width=self.__combobox_width * self.__recipe.get_recipe_depth())
             self.__recipe_select_combobox.config(state="readonly")
+            self.__category_delete_button.config(state=tk.NORMAL)
+            self.__recipe_option_exist.config(state=tk.NORMAL)
+            self.__recipe_option_full.config(state=tk.NORMAL)
+            self.__recipe_option_stir.config(state=tk.NORMAL)
+            self.__recipe_option_shake.config(state=tk.NORMAL)
+            self.__recipe_option_top.config(state=tk.NORMAL)
         except Exception as e:
             print(e)
             traceback.print_exc()
