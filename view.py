@@ -84,17 +84,17 @@ class MainView:
         self.__recipe_option_label = tk.Label(self.__recipe_select_frame, text="Option", font=("Helvetica", 13, "bold"))
         self.__recipe_option_label.grid(row=1, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
 
-        self.__recipe_option_preparation_label = tk.Label(self.__recipe_select_frame, text="Preparation")
-        self.__recipe_option_preparation_label.grid(row=2, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
+        self.__recipe_option_ingredient_label = tk.Label(self.__recipe_select_frame, text="Ingredient")
+        self.__recipe_option_ingredient_label.grid(row=2, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
 
-        self.__recipe_option_preparation = tk.IntVar()
-        self.__recipe_option_preparation.set(0)
+        self.__recipe_option_ingredient = tk.IntVar()
+        self.__recipe_option_ingredient.set(0)
 
-        self.__recipe_option_exist = tk.Radiobutton(self.__recipe_select_frame, text="Exist", variable=self.__recipe_option_preparation, value=0, state=tk.DISABLED)
-        self.__recipe_option_exist.grid(row=2, column=1, padx=self.__padx, pady=self.__pady, sticky="w")
+        self.__recipe_ingredient_exist = tk.Radiobutton(self.__recipe_select_frame, text="Exist", variable=self.__recipe_option_ingredient, value=0, state=tk.DISABLED)
+        self.__recipe_ingredient_exist.grid(row=2, column=1, padx=self.__padx, pady=self.__pady, sticky="w")
 
-        self.__recipe_option_full = tk.Radiobutton(self.__recipe_select_frame, text="Full", variable=self.__recipe_option_preparation, value=1, state=tk.DISABLED)
-        self.__recipe_option_full.grid(row=2, column=2, padx=self.__padx, pady=self.__pady, sticky="w")
+        self.__recipe_ingredient_full = tk.Radiobutton(self.__recipe_select_frame, text="Full", variable=self.__recipe_option_ingredient, value=1, state=tk.DISABLED)
+        self.__recipe_ingredient_full.grid(row=2, column=2, padx=self.__padx, pady=self.__pady, sticky="w")
 
         self.__recipe_option_style_label = tk.Label(self.__recipe_select_frame, text="style")
         self.__recipe_option_style_label.grid(row=3, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
@@ -220,15 +220,34 @@ class MainView:
         if not self.__category_selected:
             self.__category_delete_button.config(state=tk.DISABLED)
 
+    def __search_recipes_full_ingredient(self, category_selected: set):
+        recipe_category = self.__recipe.get_category()
+        recipe_set = set(self.__recipe.get_all_recipe_names())
+
+        def __search_recipes_recursive(data: dict, keys: list, category_selected: set):
+            nonlocal recipe_set
+            for key, value in data.items():
+                if isinstance(value, dict):
+                    __search_recipes_recursive(value, keys + [key], category_selected)
+                else:
+                    if '-'.join(keys + [key]) not in category_selected:
+                        recipe_set -= set(value)
+
+        __search_recipes_recursive(recipe_category, [], category_selected)
+
+        return recipe_set
+
     def __search_recipes(self):
         recipe_set = set()
-        if self.__recipe_option_preparation.get() == 0:
+        if self.__recipe_option_ingredient.get() == 0:
             for category in self.__category_selected:
                 keys = list(category.split('-'))
                 data = self.__recipe.get_category()[keys[0]]
                 for key in keys[1:]:
                     data = data[key]
                 recipe_set.update(data)
+        else:
+            recipe_set = self.__search_recipes_full_ingredient(self.__category_selected)
 
         filtered_recipe = []
         for recipe in recipe_set:
@@ -242,6 +261,7 @@ class MainView:
             filtered_recipe.append(recipe)
 
         self.__recipe_select_combobox.config(values=['--Select--'] + sorted(filtered_recipe))
+        self.__recipe_select_combobox.set("--Select--")
 
     def __on_recipe_select(self, event):
         cocktail_name = event.widget.get()
@@ -287,8 +307,8 @@ class MainView:
             self.__category_combobox.config(state="readonly", width=self.__combobox_width * self.__recipe.get_recipe_depth())
             self.__recipe_select_combobox.config(state="readonly")
             self.__category_delete_button.config(state=tk.NORMAL)
-            self.__recipe_option_exist.config(state=tk.NORMAL)
-            self.__recipe_option_full.config(state=tk.NORMAL)
+            self.__recipe_ingredient_exist.config(state=tk.NORMAL)
+            self.__recipe_ingredient_full.config(state=tk.NORMAL)
             self.__recipe_option_stir.config(state=tk.NORMAL)
             self.__recipe_option_shake.config(state=tk.NORMAL)
             self.__recipe_option_top.config(state=tk.NORMAL)
