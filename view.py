@@ -13,8 +13,8 @@ class MainView:
 
     # Recipe class instance
     __recipe = None
-    __width = 800
-    __height = 600
+    __width = 1000
+    __height = 800
     __padx = 10
     __pady = 5
     __combobox_width = 10
@@ -37,10 +37,10 @@ class MainView:
         self.__root.geometry(f"{self.__width + 2 * self.__padx}x{self.__height + 2 * 4 * self.__pady}")
         self.__root.resizable(False, False)
         self.__root.grid_rowconfigure(0, weight=30)
-        self.__root.grid_rowconfigure(1, weight=10)
-        self.__root.grid_rowconfigure(2, weight=10)
-        self.__root.grid_rowconfigure(3, weight=25)
-        self.__root.grid_rowconfigure(4, weight=5)
+        self.__root.grid_rowconfigure(1, weight=7)
+        self.__root.grid_rowconfigure(2, weight=7)
+        self.__root.grid_rowconfigure(3, weight=20)
+        self.__root.grid_rowconfigure(4, weight=3)
 
         self.__recipe_detail_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
         self.__recipe_detail_frame.pack_propagate(False)
@@ -114,9 +114,12 @@ class MainView:
         self.__recipe_option_top = tk.Checkbutton(self.__recipe_select_frame, text="Top", variable=self.__recipe_type['top'], onvalue=True, offvalue=False, state=tk.DISABLED)
         self.__recipe_option_top.grid(row=3, column=3, padx=self.__padx, pady=self.__pady, sticky="w")
 
+        self.__recipe_search_button = tk.Button(self.__recipe_select_frame, text="Search", state=tk.DISABLED)
+        self.__recipe_search_button.grid(row=4, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
+
         self.__recipe_select_combobox = ttk.Combobox(self.__recipe_select_frame, values=['--Select--'], width=self.__combobox_width, state="disabled")
         self.__recipe_select_combobox.set("--Select--")
-        self.__recipe_select_combobox.grid(row=4, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
+        self.__recipe_select_combobox.grid(row=5, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
 
         self.__control_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
         self.__control_frame.grid(row=4, column=0, padx=self.__padx, pady=self.__pady, sticky="nsew")
