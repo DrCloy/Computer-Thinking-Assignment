@@ -37,9 +37,9 @@ class MainView:
         self.__root.geometry(f"{self.__width + 2 * self.__padx}x{self.__height + 2 * 4 * self.__pady}")
         self.__root.resizable(False, False)
         self.__root.grid_rowconfigure(0, weight=30)
-        self.__root.grid_rowconfigure(1, weight=7)
-        self.__root.grid_rowconfigure(2, weight=7)
-        self.__root.grid_rowconfigure(3, weight=7)
+        self.__root.grid_rowconfigure(1, weight=8)
+        self.__root.grid_rowconfigure(2, weight=8)
+        self.__root.grid_rowconfigure(3, weight=14)
         self.__root.grid_rowconfigure(4, weight=1)
 
         self.__recipe_detail_frame = tk.Frame(self.__root, highlightbackground="white", highlightthickness=1, width=self.__width)
