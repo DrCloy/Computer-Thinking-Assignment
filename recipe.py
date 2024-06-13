@@ -65,7 +65,7 @@ class Recipe:
             return result
 
         self.__recipe["created_at"] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        self.__recipe["category"] = __parse_directory(self.__recipe_directory)
+        self.__recipe["category"] = __parse_directory(self.__recipe_directory, recipe_details)
         self.__recipe["recipe_details"] = recipe_details
         self.__recipe_depth = self.__calculate_recipe_depth()
 
