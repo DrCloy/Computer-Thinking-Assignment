@@ -19,6 +19,42 @@
 
 - Python 3.10 이상
 
+### Installation
+
+1. 저장소를 클론합니다.
+
+```bash
+git clone "https://github.com/DrCloy/Computer-Thinking-Assignment.git"
+```
+
+2. 저장소 디렉토리로 이동합니다.
+
+```bash
+cd Computer-Thinking-Assignment
+```
+
+3. "Recipe.zip" 파일을 압축 해제합니다.
+
+```bash
+unzip Recipe.zip
+```
+
+### Usage
+
+1. 앱을 실행합니다.
+
+```bash
+python main.py
+```
+
+### Features
+
+1. **칵테일 레시피 확인**
+2. **보유 중인 재료 추가**
+3. **보유 중인 재료 삭제**
+4. **특정 방법으로 만들 수 있는 칵테일 레시피 확인**
+5. **종료**
+
 ### Documentation
 
 - 칵테일 레시피 출처
