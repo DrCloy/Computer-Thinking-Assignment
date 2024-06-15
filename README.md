@@ -17,7 +17,7 @@
 
 ### Requirements
 
-- Python 3.8 이상
+- Python 3.10 이상
 
 ### Documentation
 
