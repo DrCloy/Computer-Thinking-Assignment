@@ -12,15 +12,6 @@ class Recipe:
     Class to manage cocktail recipes 
     """
 
-    # Private attributes
-    __recipe: dict = {
-        "created_at": "",
-        "category": {},
-        "recipe_details": {}
-    }
-    __recipe_depth: int = 0
-    __recipe_directory: str = ""
-
     def __init__(self, recipe_directory: str) -> None:
         """
         Constructor for Recipe class
@@ -28,6 +19,13 @@ class Recipe:
         Args:
             recipe_directory (str): Directory containing recipe files
         """
+
+        self.__recipe = {
+            "created_at": "",
+            "category": {},
+            "recipe_details": {}
+        }
+        self.__recipe_depth = 0
         self.__recipe_directory = recipe_directory
         self.__recipe_depth = 0
 

@@ -11,19 +11,16 @@ class MainView:
     Class to create GUI for Cocktail Recipe Application
     """
 
-    # Recipe class instance
-    __recipe = None
-    __width = 1000
-    __height = 800
-    __padx = 10
-    __pady = 5
-    __combobox_width = 10
-    __combobox_list = []
-    __category_selected = set()
-    __add_button = None
-
     def __init__(self, recipe: Recipe) -> None:
         self.__recipe = recipe
+        self.__width = 1000
+        self.__height = 800
+        self.__padx = 10
+        self.__pady = 5
+        self.__combobox_width = 10
+        self.__combobox_list = []
+        self.__category_selected = set()
+        self.__add_button = None
 
     def init(self):
         """
