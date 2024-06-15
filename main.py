@@ -1,5 +1,5 @@
-from src.recipe import Recipe
-from src.view import MainView, InitView
+from recipe import Recipe
+from view import MainView, InitView
 
 
 if __name__ == "__main__":

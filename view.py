@@ -3,7 +3,7 @@ import tkinter.scrolledtext as tkst
 import tkinter.ttk as ttk
 import threading
 import traceback
-from src.recipe import Recipe
+from recipe import Recipe
 
 
 class MainView:
