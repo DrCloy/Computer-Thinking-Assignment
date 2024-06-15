@@ -96,7 +96,7 @@ class MainView:
         self.__recipe_ingredient_full = tk.Radiobutton(self.__recipe_select_frame, text="Full", variable=self.__recipe_option_ingredient, value=1, state=tk.DISABLED)
         self.__recipe_ingredient_full.grid(row=2, column=2, padx=self.__padx, pady=self.__pady, sticky="w")
 
-        self.__recipe_option_style_label = tk.Label(self.__recipe_select_frame, text="style")
+        self.__recipe_option_style_label = tk.Label(self.__recipe_select_frame, text="Style")
         self.__recipe_option_style_label.grid(row=3, column=0, padx=self.__padx, pady=self.__pady, sticky="w")
 
         self.__recipe_style = {
@@ -105,7 +105,8 @@ class MainView:
             "top": tk.BooleanVar()
         }
 
-        self.__recipe_option_stir = tk.Checkbutton(self.__recipe_select_frame, text="Stirred", variable=self.__recipe_style['stirred'], onvalue=True, offvalue=False, state=tk.DISABLED)
+        self.__recipe_option_stir = tk.Checkbutton(self.__recipe_select_frame, text="Stirred",
+                                                   variable=self.__recipe_style['stirred'], onvalue=True, offvalue=False, state=tk.DISABLED)
         self.__recipe_option_stir.grid(row=3, column=1, padx=self.__padx, pady=self.__pady, sticky="w")
 
         self.__recipe_option_shake = tk.Checkbutton(self.__recipe_select_frame, text="Shaken", variable=self.__recipe_style['shaken'], onvalue=True, offvalue=False, state=tk.DISABLED)
@@ -252,11 +253,11 @@ class MainView:
         filtered_recipe = []
         for recipe in recipe_set:
             recipe_detail = self.__recipe.get_recipe_detail(recipe)
-            if self.__recipe_style['stirred'].get() and 'stirred' not in recipe_detail['style']:
+            if self.__recipe_style['stirred'].get() and 'stirred' not in list(map(str.lower, recipe_detail['style'])):
                 continue
-            if self.__recipe_style['shaken'].get() and 'shaken' not in recipe_detail['style']:
+            if self.__recipe_style['shaken'].get() and 'shaken' not in list(map(str.lower, recipe_detail['style'])):
                 continue
-            if self.__recipe_style['top'].get() and 'top' not in recipe_detail['style']:
+            if self.__recipe_style['top'].get() and 'top' not in list(map(str.lower, recipe_detail['style'])):
                 continue
             filtered_recipe.append(recipe)
 
