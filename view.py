@@ -288,29 +288,32 @@ class MainView:
 
         self.__recipe_detail_text.config(state=tk.DISABLED)
 
+    def __activate(self):
+        for combobox in self.__combobox_list:
+            combobox.destroy()
+        self.__combobox_list = []
+        if self.__add_button:
+            self.__add_button.destroy()
+        self.__category_selected = set()
+        self.__add_button = None
+        self.__add_combobox(self.__recipe.get_category())
+        self.__category_combobox.config(state="readonly", width=self.__combobox_width * self.__recipe.get_recipe_depth())
+        self.__recipe_select_combobox.config(state="readonly")
+        self.__category_delete_button.config(state=tk.NORMAL)
+        self.__recipe_ingredient_exist.config(state=tk.NORMAL)
+        self.__recipe_ingredient_full.config(state=tk.NORMAL)
+        self.__recipe_option_stir.config(state=tk.NORMAL)
+        self.__recipe_option_shake.config(state=tk.NORMAL)
+        self.__recipe_option_top.config(state=tk.NORMAL)
+        self.__recipe_search_button.config(state=tk.NORMAL)
+
     def __import_recipe(self):
         try:
             if not self.__recipe:
                 return
             self.__recipe.import_recipe()
             self.__status_label.config(text="Created At: " + self.__recipe.get_created_time())
-            for combobox in self.__combobox_list:
-                combobox.destroy()
-            self.__combobox_list = []
-            if self.__add_button:
-                self.__add_button.destroy()
-            self.__category_selected = set()
-            self.__add_button = None
-            self.__add_combobox(self.__recipe.get_category())
-            self.__category_combobox.config(state="readonly", width=self.__combobox_width * self.__recipe.get_recipe_depth())
-            self.__recipe_select_combobox.config(state="readonly")
-            self.__category_delete_button.config(state=tk.NORMAL)
-            self.__recipe_ingredient_exist.config(state=tk.NORMAL)
-            self.__recipe_ingredient_full.config(state=tk.NORMAL)
-            self.__recipe_option_stir.config(state=tk.NORMAL)
-            self.__recipe_option_shake.config(state=tk.NORMAL)
-            self.__recipe_option_top.config(state=tk.NORMAL)
-            self.__recipe_search_button.config(state=tk.NORMAL)
+            self.__activate()
         except Exception as e:
             print(e)
             traceback.print_exc()
@@ -330,7 +333,10 @@ class MainView:
         try:
             self.__recipe.generate_recipe()
             self.__status_label.config(text="Generated")
+            self.__activate()
             threading.Timer(3, lambda: self.__status_label.config(text="Created At: " + self.__recipe.get_created_time())).start()
+        except FileNotFoundError:
+            self.__status_label.config(text="Recipe Directory Not Found")
         except Exception as e:
             print(e)
             traceback.print_exc()
