@@ -250,13 +250,22 @@ class MainView:
         filtered_recipe = []
         for recipe in recipe_set:
             recipe_detail = self.__recipe.get_recipe_detail(recipe)
-            if self.__recipe_style['stirred'].get() and 'stirred' not in list(map(str.lower, recipe_detail['style'])):
-                continue
-            if self.__recipe_style['shaken'].get() and 'shaken' not in list(map(str.lower, recipe_detail['style'])):
-                continue
-            if self.__recipe_style['top'].get() and 'top' not in list(map(str.lower, recipe_detail['style'])):
-                continue
-            filtered_recipe.append(recipe)
+            if self.__recipe_style['stirred'].get() or self.__recipe_style['shaken'].get() or self.__recipe_style['top'].get():
+                if self.__recipe_style['stirred'].get() and 'stirred' not in list(map(str.lower, recipe_detail['style'])):
+                    continue
+                if not self.__recipe_style['stirred'].get() and 'stirred' in list(map(str.lower, recipe_detail['style'])):
+                    continue
+                if self.__recipe_style['shaken'].get() and 'shaken' not in list(map(str.lower, recipe_detail['style'])):
+                    continue
+                if not self.__recipe_style['shaken'].get() and 'shaken' in list(map(str.lower, recipe_detail['style'])):
+                    continue
+                if self.__recipe_style['top'].get() and 'top' not in list(map(str.lower, recipe_detail['style'])):
+                    continue
+                if not self.__recipe_style['top'].get() and 'top' in list(map(str.lower, recipe_detail['style'])):
+                    continue
+                filtered_recipe.append(recipe)
+            else:
+                filtered_recipe.append(recipe)
 
         self.__recipe_select_combobox.config(values=['--Select--'] + sorted(filtered_recipe))
         self.__recipe_select_combobox.set("--Select--")
