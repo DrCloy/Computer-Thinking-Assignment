@@ -33,39 +33,46 @@ class Recipe:
         """
         Function to generate recipe dictionary from directory of recipe files
         """
+        try:
+            recipe_details = {}
 
-        recipe_details = {}
+            def __parse_directory(path: str, recipe_details: dict = {}):
+                """
+                Function to parse directory and return a list of dictionaries
 
-        def __parse_directory(path: str, recipe_details: dict = {}):
-            """
-            Function to parse directory and return a list of dictionaries
+                Args:
+                    path (str): Path to directory
 
-            Args:
-                path (str): Path to directory
+                Returns:
+                    Dictionary
+                """
 
-            Returns:
-                Dictionary
-            """
+                result = {}
+                for entry in os.listdir(path):
+                    full_path = os.path.join(path, entry)
 
-            result = {}
-            for entry in os.listdir(path):
-                full_path = os.path.join(path, entry)
+                    if os.path.isdir(full_path):
+                        sub_result = __parse_directory(full_path, recipe_details)
+                        result[entry] = sub_result
+                    elif entry.endswith(".json"):
+                        if isinstance(result, dict):
+                            result = []
+                        result.append(entry[:-5])
+                        with open(full_path, "r") as f:
+                            recipe_details[entry[:-5]] = json.load(f)
+                return result
 
-                if os.path.isdir(full_path):
-                    sub_result = __parse_directory(full_path, recipe_details)
-                    result[entry] = sub_result
-                elif entry.endswith(".json"):
-                    if isinstance(result, dict):
-                        result = []
-                    result.append(entry[:-5])
-                    with open(full_path, "r") as f:
-                        recipe_details[entry[:-5]] = json.load(f)
-            return result
-
-        self.__recipe["created_at"] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        self.__recipe["category"] = __parse_directory(self.__recipe_directory, recipe_details)
-        self.__recipe["recipe_details"] = recipe_details
-        self.__recipe_depth = self.__calculate_recipe_depth()
+            self.__recipe["created_at"] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            self.__recipe["category"] = __parse_directory(self.__recipe_directory, recipe_details)
+            self.__recipe["recipe_details"] = recipe_details
+            self.__recipe_depth = self.__calculate_recipe_depth()
+        except FileNotFoundError:
+            self.__recipe = {
+                "created_at": "Recipe Directory Not Found",
+                "category": {},
+                "recipe_details": {}
+            }
+            self.__recipe_depth = 0
 
     def import_recipe(self):
         """
@@ -78,7 +85,7 @@ class Recipe:
             self.__recipe_depth = self.__calculate_recipe_depth()
         except FileNotFoundError:
             self.__recipe = {
-                "created_at": "No recipe found",
+                "created_at": "Recipe File Not Found",
                 "category": {},
                 "recipe_details": {}
             }

@@ -344,8 +344,6 @@ class MainView:
             self.__status_label.config(text="Generated")
             self.__activate()
             threading.Timer(3, lambda: self.__status_label.config(text="Created At: " + self.__recipe.get_created_time())).start()
-        except FileNotFoundError:
-            self.__status_label.config(text="Recipe Directory Not Found")
         except Exception as e:
             print(e)
             traceback.print_exc()
